@@ -1,13 +1,13 @@
 package com.marcom.scheduler;
 
 import java.util.ArrayList;
-import java.util.List;
+//import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
+//import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
@@ -77,6 +77,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		// String selection = "DELETE FROM " + CLUBS + " WHERE clubName=" + id;
 		
 		db.delete(CLUBS, "clubName = ?", new String[] { id });
+		db.close();
+	}
+	
+	// crud operations for events
+	public void addEvent(String clubid, String description, String time) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put("clubName", clubid);
+		values.put("description", description);
+		values.put("date", time);
+		
+		// db.execSQL("CREATE TABLE " + EVENTS + "(id INTEGER PRIMARY KEY, clubName TEXT, description TEXT, date TEXT)");
+		db.insert(EVENTS, null, values);
+		db.close();
+	}
+	
+	public void deleteEvent(String clubid, String desc) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		db.rawQuery("DELETE FROM " + EVENTS + " WHERE clubName=" + clubid + ", description=" + desc, null);
+		
+		db.close();
+	}
+	
+	public void deleteEventsByClubId(String clubid) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		db.rawQuery("DELETE FROM " + EVENTS + "WHERE clubName=" + clubid, null);
+		
 		db.close();
 	}
 

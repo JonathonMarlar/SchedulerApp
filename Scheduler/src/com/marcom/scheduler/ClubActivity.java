@@ -1,7 +1,7 @@
 package com.marcom.scheduler;
 
 import java.util.ArrayList;
-import java.util.List;
+//import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -18,6 +18,8 @@ public class ClubActivity extends Activity {
 	DatabaseHandler db;
 	ArrayList<String> clubs;
 	ArrayAdapter<String> adapter;
+	
+	public final static String CLUB_NAME = "com.marcom.scheduler.CLUBNAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +41,15 @@ public class ClubActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
 				// TODO Auto-generated method stub
+				/*
 				String clubToRemove = (String) parent.getItemAtPosition(pos);
 				db.removeClub(clubToRemove);
 				
 				// update
 				onResume();
+				*/
+				String clb = (String) parent.getItemAtPosition(pos);
+				gotoEventActivity(clb);
 			}
         	
 		});
@@ -76,6 +82,12 @@ public class ClubActivity extends Activity {
     
     public void addClass(View view) {
     	Intent intent = new Intent(this, AddClubActivity.class);
+    	startActivity(intent);
+    }
+    
+    public void gotoEventActivity(String club) {
+    	Intent intent = new Intent(this, EventActivity.class);
+    	intent.putExtra(CLUB_NAME, club);
     	startActivity(intent);
     }
 }

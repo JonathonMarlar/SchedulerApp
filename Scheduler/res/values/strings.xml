@@ -6,9 +6,20 @@
     <string name="hello_world">Hello world!</string>
     <string name="add_class">Add Class</string>
     <string name="title_activity_add_club">AddClubActivity</string>
-    
+
     <!-- activity_add_club.xml -->
     <string name="addclub_text_hint">Name of class or club</string>
     <string name="addclub_button_hint">Make Class</string>
+    <string name="title_activity_event">EventActivity</string>
+
+    <!-- EventActivity -->
+    <string name="club_title">Defaults</string>
+    <string name="make_new_event_button">Add Event</string>
+    <string name="title_activity_add_event">AddEventActivity</string>
+    
+    <!-- AddEventActivity -->
+    <string name="addevent_text_view">Event Description</string>
+    <string name="eventtextfield_hint">Description</string>
+    <string name="addevent_button_confirmation">Add Event</string>
 
 </resources>

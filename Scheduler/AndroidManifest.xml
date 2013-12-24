@@ -30,6 +30,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.marcom.scheduler.ClubActivity" />
         </activity>
+        <activity
+            android:name="com.marcom.scheduler.EventActivity"
+            android:label="@string/title_activity_event"
+            android:parentActivityName="com.marcom.scheduler.ClubActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.marcom.scheduler.ClubActivity" />
+        </activity>
+        <activity
+            android:name="com.marcom.scheduler.AddEventActivity"
+            android:label="@string/title_activity_add_event"
+            android:parentActivityName="com.marcom.scheduler.EventActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.marcom.scheduler.EventActivity" />
+        </activity>
     </application>
 
 </manifest>
