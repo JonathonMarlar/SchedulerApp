@@ -43,6 +43,7 @@
         android:layout_alignLeft="@+id/eventNameTextView"
         android:layout_below="@+id/datePicker"
         android:layout_marginTop="46dp"
-        android:text="@string/addevent_button_confirmation" />
+        android:text="@string/addevent_button_confirmation"
+        android:onClick="addEvent" />
 
 </RelativeLayout>

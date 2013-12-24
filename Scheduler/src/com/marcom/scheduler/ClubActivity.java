@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+// import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -52,6 +53,23 @@ public class ClubActivity extends Activity {
 				gotoEventActivity(clb);
 			}
         	
+		});
+        
+        clubListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int pos, long id) {
+				// TODO Auto-generated method stub
+				// Log.v("long clicked","pos: " + pos);
+				String clubToRemove = (String) parent.getItemAtPosition(pos);
+				db.removeClub(clubToRemove);
+				
+				db.deleteEventsByClubId(clubToRemove);
+				
+				onResume();
+                return true;
+			}
 		});
         
         db.close();

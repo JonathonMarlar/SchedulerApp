@@ -1,10 +1,16 @@
 package com.marcom.scheduler;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.app.Activity;
+// import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
@@ -13,7 +19,11 @@ import android.os.Build;
 
 public class EventActivity extends Activity {
 	
-	private final static String CLUBNAME = "com.marcom.scheduler.CLUB";
+	public final static String CLUB_ID_EVENT = "com.marcom.scheduler.CLUBNAME";
+	ListView eventListView;
+	DatabaseHandler db;
+	ArrayList<String> events;
+	ArrayAdapter<String> adapter;
 	String clubid;
 
 	@Override
@@ -29,6 +39,34 @@ public class EventActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.clubNameField);
 		tv.setText(title);
 		clubid = title;
+		
+		// refresh the list
+		eventListView = (ListView) findViewById(R.id.eventList);
+		db = new DatabaseHandler(this);
+				
+		events = db.getEventsById(clubid);
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1,
+				events);
+		eventListView.setAdapter(adapter);
+		
+		eventListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int pos, long id) {
+				// TODO Auto-generated method stub
+				String eventToRemove = (String) parent.getItemAtPosition(pos);
+				//Log.v("event", eventToRemove);
+				
+				db.deleteEvent(clubid, eventToRemove);
+				
+				onResume();
+				return true;
+			}
+		});
+		
+		db.close();
 	}
 
 	/**
@@ -65,9 +103,26 @@ public class EventActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		// refresh the list
+		eventListView = (ListView) findViewById(R.id.eventList);
+		db = new DatabaseHandler(this);
+		
+		events = db.getEventsById(clubid);
+		adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1,
+				events);
+		eventListView.setAdapter(adapter);
+		
+		db.close();
+	}
+	
 	public void addEvent(View view) {
 		Intent intent = new Intent(this, AddEventActivity.class);
-		intent.putExtra(CLUBNAME, clubid);
+		intent.putExtra(CLUB_ID_EVENT, clubid);
 		startActivity(intent);
 	}
 

@@ -68,6 +68,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 		
+		db.close();
+		
 		return clubs;
 	}
 	
@@ -94,10 +96,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	public ArrayList<String> getEventsById(String clubid) {
+		ArrayList<String> events = new ArrayList<String>();
+		
+		String selection = "SELECT description FROM " + EVENTS + " WHERE clubName='" + clubid + "' ORDER BY date";
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selection, null);
+		
+		if ( cursor.moveToFirst() ) {
+			do {
+				events.add(cursor.getString(0));
+			} while (cursor.moveToNext());
+		}
+		
+		db.close();
+		
+		return events;
+	}
+	
 	public void deleteEvent(String clubid, String desc) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		db.rawQuery("DELETE FROM " + EVENTS + " WHERE clubName=" + clubid + ", description=" + desc, null);
+		//db.rawQuery("DELETE FROM " + EVENTS + " WHERE clubName='" + clubid + "' AND description='" + desc + "'", null);
+		
+		db.delete(EVENTS, "clubName='" + clubid + "' AND description='" + desc + "'", null);
 		
 		db.close();
 	}
@@ -105,7 +128,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void deleteEventsByClubId(String clubid) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
-		db.rawQuery("DELETE FROM " + EVENTS + "WHERE clubName=" + clubid, null);
+		//db.rawQuery("DELETE FROM " + EVENTS + " WHERE clubName='" + clubid + "'", null);
+		
+		db.delete(EVENTS, "clubName='" + clubid + "'", null);
 		
 		db.close();
 	}

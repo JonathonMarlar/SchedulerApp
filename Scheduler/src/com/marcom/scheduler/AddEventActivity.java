@@ -4,11 +4,17 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 
 public class AddEventActivity extends Activity {
+	
+	String cid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +22,9 @@ public class AddEventActivity extends Activity {
 		setContentView(R.layout.activity_add_event);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		Intent intent = getIntent();
+		cid = intent.getStringExtra(EventActivity.CLUB_ID_EVENT);
 	}
 
 	/**
@@ -50,6 +59,21 @@ public class AddEventActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void addEvent(View view) {
+		// info from widgets
+		DatePicker dt = (DatePicker) findViewById(R.id.datePicker);
+		EditText descField = (EditText) findViewById(R.id.eventDescriptionField);
+		
+		String desc = descField.getText().toString();
+		String date = Integer.toString(dt.getMonth());
+		date = date + "-" + Integer.toString(dt.getDayOfMonth());
+		
+		DatabaseHandler eventHandle = new DatabaseHandler(this);
+		
+		eventHandle.addEvent(cid, desc, date);
+		finish();
 	}
 
 }
