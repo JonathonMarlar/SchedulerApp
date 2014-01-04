@@ -71,9 +71,22 @@ public class AddEventActivity extends Activity {
 		// date
 		//String date = Integer.toString(dt.getMonth());
 		// date = date + "-" + Integer.toString(dt.getDayOfMonth());
-		int mon = dt.getMonth();
+		int mon = dt.getMonth() + 1;
 		int day = dt.getDayOfMonth();
-		String date;
+		int year = dt.getYear();
+		
+		String date = "";
+		
+		if ( mon < 10 )
+			date += "0" + Integer.toString(mon) + "/";
+		else date += Integer.toString(mon) + "/";
+		if ( day < 10 )
+			date += "0" + Integer.toString(day) + "/";
+		else date += Integer.toString(day) + "/";
+		date += Integer.toString(year);
+		
+		
+		/*************************************
 		switch (mon) {
 		case 0:
 			date = "Jan " + Integer.toString(day); break;
@@ -102,6 +115,7 @@ public class AddEventActivity extends Activity {
 		default:
 				date = "Feb 33"; break;
 		}
+		*/
 		
 		DatabaseHandler eventHandle = new DatabaseHandler(this);
 		

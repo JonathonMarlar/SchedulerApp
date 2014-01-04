@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 // import android.util.Log;
 import android.view.Menu;
@@ -27,14 +29,7 @@ public class ClubActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club);
         
-        clubListView = (ListView) findViewById(R.id.clubListView);
-        db = new DatabaseHandler(this);
-        clubs = db.getAllClubs();
-        
-        adapter = new ArrayAdapter<String>(this,
-        		android.R.layout.simple_list_item_1,
-        		clubs);
-        clubListView.setAdapter(adapter);
+        updateList();
         
         clubListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -58,16 +53,45 @@ public class ClubActivity extends Activity {
         clubListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int pos, long id) {
+			public boolean onItemLongClick(final AdapterView<?> parent, View view,
+					final int pos, long id) {
 				// TODO Auto-generated method stub
 				// Log.v("long clicked","pos: " + pos);
+				
+				AlertDialog.Builder alertDialogBuild = new AlertDialog.Builder(parent.getContext());
+				alertDialogBuild.setTitle("Are you sure?");
+				alertDialogBuild.setMessage("Are you sure you want to delete this class/club?");
+				alertDialogBuild.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						String clubToRemove = (String) parent.getItemAtPosition(pos);
+						db.removeClub(clubToRemove);
+						
+						db.deleteEventsByClubId(clubToRemove);
+						
+						updateList();
+					}
+				});
+				alertDialogBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						dialog.cancel();
+					}
+				});
+				AlertDialog alertDialog = alertDialogBuild.create();
+				alertDialog.show();
+				
+				/*
 				String clubToRemove = (String) parent.getItemAtPosition(pos);
 				db.removeClub(clubToRemove);
 				
-				db.deleteEventsByClubId(clubToRemove);
+				db.deleteEventsByClubId(clubToRemove);*/
 				
-				onResume();
+				// onResume();
                 return true;
 			}
 		});
@@ -87,6 +111,10 @@ public class ClubActivity extends Activity {
     @Override
     protected void onResume() {
     	super.onResume();
+    	updateList();
+    }
+    
+    public void updateList() {
     	clubListView = (ListView) findViewById(R.id.clubListView);
         db = new DatabaseHandler(this);
         clubs = db.getAllClubs();
