@@ -67,8 +67,41 @@ public class AddEventActivity extends Activity {
 		EditText descField = (EditText) findViewById(R.id.eventDescriptionField);
 		
 		String desc = descField.getText().toString();
-		String date = Integer.toString(dt.getMonth());
-		date = date + "-" + Integer.toString(dt.getDayOfMonth());
+		
+		// date
+		//String date = Integer.toString(dt.getMonth());
+		// date = date + "-" + Integer.toString(dt.getDayOfMonth());
+		int mon = dt.getMonth();
+		int day = dt.getDayOfMonth();
+		String date;
+		switch (mon) {
+		case 0:
+			date = "Jan " + Integer.toString(day); break;
+		case 1:
+			date = "Feb " + Integer.toString(day); break;
+		case 2:
+			date = "Mar " + Integer.toString(day); break;
+		case 3:
+			date = "Apr " + Integer.toString(day); break;
+		case 4:
+			date = "May " + Integer.toString(day); break;
+		case 5:
+			date = "Jun " + Integer.toString(day); break;
+		case 6:
+			date = "Jul " + Integer.toString(day); break;
+		case 7:
+			date = "Aug " + Integer.toString(day); break;
+		case 8:
+			date = "Sep " + Integer.toString(day); break;
+		case 9:
+			date = "Oct " + Integer.toString(day); break;
+		case 10:
+			date = "Nov " + Integer.toString(day); break;
+		case 11:
+			date = "Dec " + Integer.toString(day); break;
+		default:
+				date = "Feb 33"; break;
+		}
 		
 		DatabaseHandler eventHandle = new DatabaseHandler(this);
 		

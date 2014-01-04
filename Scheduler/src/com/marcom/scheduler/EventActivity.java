@@ -1,6 +1,9 @@
 package com.marcom.scheduler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
@@ -25,6 +29,11 @@ public class EventActivity extends Activity {
 	ArrayList<String> events;
 	ArrayAdapter<String> adapter;
 	String clubid;
+	
+	// stuff for listview date and event
+	// List<Map<String, String>> dateEvent;
+	ArrayList<String> dates;
+	SimpleAdapter simpadp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,7 @@ public class EventActivity extends Activity {
 		clubid = title;
 		
 		// refresh the list
+		/*
 		eventListView = (ListView) findViewById(R.id.eventList);
 		db = new DatabaseHandler(this);
 				
@@ -49,6 +59,29 @@ public class EventActivity extends Activity {
 				android.R.layout.simple_list_item_1,
 				events);
 		eventListView.setAdapter(adapter);
+		*/
+		eventListView = (ListView) findViewById(R.id.eventList);
+		db = new DatabaseHandler(this);
+		
+		List<Map<String, String>> dateEvent = new ArrayList<Map<String, String>>();
+		events = db.getEventsById(clubid);
+		dates = db.getDateEventsById(clubid);
+		
+		for ( int i = 0; i < events.size(); i++ ) {
+			Map<String, String> datum = new HashMap<String, String>(2);
+			datum.put("Event", events.get(i));
+			datum.put("Date", dates.get(i));
+			dateEvent.add(datum);
+		}
+		
+		simpadp = new SimpleAdapter(this, dateEvent,
+				android.R.layout.simple_list_item_2,
+				new String[] {"Event", "Date"},
+				new int[] {android.R.id.text1, android.R.id.text2});
+		
+		eventListView.setAdapter(simpadp);
+		
+		// -------------------------------------------------------------------------------
 		
 		eventListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -56,9 +89,16 @@ public class EventActivity extends Activity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int pos, long id) {
 				// TODO Auto-generated method stub
-				String eventToRemove = (String) parent.getItemAtPosition(pos);
+				// String eventToRemove = (String) parent.getItemAtPosition(pos);
 				//Log.v("event", eventToRemove);
 				
+				// db.deleteEvent(clubid, eventToRemove);
+				
+				// Log.v("event", t);
+				@SuppressWarnings("unchecked")
+				Map<String, String> m = (HashMap<String, String>) parent.getItemAtPosition(pos);
+				
+				String eventToRemove = m.get("Event");
 				db.deleteEvent(clubid, eventToRemove);
 				
 				onResume();
@@ -108,6 +148,7 @@ public class EventActivity extends Activity {
 		super.onResume();
 		
 		// refresh the list
+		/*
 		eventListView = (ListView) findViewById(R.id.eventList);
 		db = new DatabaseHandler(this);
 		
@@ -116,6 +157,27 @@ public class EventActivity extends Activity {
 				android.R.layout.simple_list_item_1,
 				events);
 		eventListView.setAdapter(adapter);
+		*/
+		eventListView = (ListView) findViewById(R.id.eventList);
+		db = new DatabaseHandler(this);
+		
+		List<Map<String, String>> dateEvent = new ArrayList<Map<String, String>>();
+		events = db.getEventsById(clubid);
+		dates = db.getDateEventsById(clubid);
+		
+		for ( int i = 0; i < events.size(); i++ ) {
+			Map<String, String> datum = new HashMap<String, String>(2);
+			datum.put("Event", events.get(i));
+			datum.put("Date", dates.get(i));
+			dateEvent.add(datum);
+		}
+		
+		simpadp = new SimpleAdapter(this, dateEvent,
+				android.R.layout.simple_list_item_2,
+				new String[] {"Event", "Date"},
+				new int[] {android.R.id.text1, android.R.id.text2});
+		
+		eventListView.setAdapter(simpadp);
 		
 		db.close();
 	}

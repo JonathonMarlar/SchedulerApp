@@ -20,8 +20,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String EVENTS = "events";
 	
 	// keys
-	// clubs
-	// private static final String KEY_ID = "id";
+	private static final String KEY_ID = "id";
+	private static final String KEY_CLUBNAME = "clubName";
+	private static final String KEY_DESC = "description";
+	private static final String KEY_DATE = "date";
 
 	public DatabaseHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,8 +33,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-		db.execSQL("CREATE TABLE " + CLUBS + "(id INTEGER PRIMARY KEY, clubName TEXT)");
-		db.execSQL("CREATE TABLE " + EVENTS + "(id INTEGER PRIMARY KEY, clubName TEXT, description TEXT, date TEXT)");
+		//db.execSQL("CREATE TABLE " + CLUBS + "(id INTEGER PRIMARY KEY, clubName TEXT)");
+		db.execSQL("CREATE TABLE " + CLUBS + "(" + KEY_ID + " INTEGER PRIMARY KEY, " +
+				KEY_CLUBNAME + " TEXT)");
+		db.execSQL("CREATE TABLE " + EVENTS + "(" + KEY_ID + " INTEGER PRIMARY KEY, " +
+				KEY_CLUBNAME + " TEXT, " +
+				KEY_DESC + " TEXT, " +
+				KEY_DATE + " TEXT)");
 	}
 
 	@Override
@@ -48,7 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put("clubName", clubid);
+		values.put(KEY_CLUBNAME, clubid);
 		
 		db.insert(CLUBS, null, values);
 		db.close();
@@ -57,7 +64,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public ArrayList<String> getAllClubs() {
 		ArrayList<String> clubs = new ArrayList<String>();
 		
-		String selection = "SELECT clubName FROM " + CLUBS;
+		// String selection = "SELECT clubName FROM " + CLUBS;
+		String selection = "SELECT " + KEY_CLUBNAME + " FROM " + CLUBS;
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selection, null);
@@ -78,7 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		
 		// String selection = "DELETE FROM " + CLUBS + " WHERE clubName=" + id;
 		
-		db.delete(CLUBS, "clubName = ?", new String[] { id });
+		db.delete(CLUBS, KEY_CLUBNAME + " = ?", new String[] { id });
 		db.close();
 	}
 	
@@ -87,9 +95,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put("clubName", clubid);
-		values.put("description", description);
-		values.put("date", time);
+		values.put(KEY_CLUBNAME, clubid);
+		values.put(KEY_DESC, description);
+		values.put(KEY_DATE, time);
 		
 		// db.execSQL("CREATE TABLE " + EVENTS + "(id INTEGER PRIMARY KEY, clubName TEXT, description TEXT, date TEXT)");
 		db.insert(EVENTS, null, values);
@@ -99,7 +107,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public ArrayList<String> getEventsById(String clubid) {
 		ArrayList<String> events = new ArrayList<String>();
 		
-		String selection = "SELECT description FROM " + EVENTS + " WHERE clubName='" + clubid + "' ORDER BY date";
+		// String selection = "SELECT description FROM " + EVENTS + " WHERE clubName='" + clubid + "' ORDER BY date";
+		String selection = "SELECT " + KEY_DESC + " FROM " + EVENTS + " WHERE " + KEY_CLUBNAME + "='" + clubid + "' ORDER BY " + KEY_DATE;
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selection, null);
+		
+		if ( cursor.moveToFirst() ) {
+			do {
+				events.add(cursor.getString(0));
+			} while (cursor.moveToNext());
+		}
+		
+		db.close();
+		
+		return events;
+	}
+	
+	public ArrayList<String> getDateEventsById(String clubid) {
+		ArrayList<String> events = new ArrayList<String>();
+		// String selection = "SELECT description FROM " + EVENTS + " WHERE clubName='" + clubid + "' ORDER BY date";
+		String selection = "SELECT " + KEY_DATE + " FROM " + EVENTS + " WHERE " + KEY_CLUBNAME + "='" + clubid + "' ORDER BY " + KEY_DATE;
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(selection, null);
@@ -120,7 +148,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		
 		//db.rawQuery("DELETE FROM " + EVENTS + " WHERE clubName='" + clubid + "' AND description='" + desc + "'", null);
 		
-		db.delete(EVENTS, "clubName='" + clubid + "' AND description='" + desc + "'", null);
+		//db.delete(EVENTS, "clubName='" + clubid + "' AND description='" + desc + "'", null);
+		db.delete(EVENTS, KEY_CLUBNAME + "='" + clubid + "' AND " + KEY_DESC + "='" + desc + "'", null);
 		
 		db.close();
 	}
@@ -130,7 +159,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		
 		//db.rawQuery("DELETE FROM " + EVENTS + " WHERE clubName='" + clubid + "'", null);
 		
-		db.delete(EVENTS, "clubName='" + clubid + "'", null);
+		//db.delete(EVENTS, "clubName='" + clubid + "'", null);
+		db.delete(EVENTS, KEY_CLUBNAME + "='" + clubid + "'", null);
 		
 		db.close();
 	}
