@@ -15,6 +15,7 @@ import android.os.Build;
 public class AddEventActivity extends Activity {
 	
 	String cid;
+	public final static String CLUB_NAME = "com.marcom.scheduler.CLUBNAME";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class AddEventActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent upIntent = NavUtils.getParentActivityIntent(this);
+		upIntent.putExtra(CLUB_NAME, cid);
+		
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			// This ID represents the Home or Up button. In the case of this
@@ -55,7 +59,7 @@ public class AddEventActivity extends Activity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpFromSameTask(this);
+			NavUtils.navigateUpTo(this, upIntent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -77,6 +81,15 @@ public class AddEventActivity extends Activity {
 		
 		String date = "";
 		
+		date += Integer.toString(year) + "/";
+		if ( mon < 10 )
+			date += "0" + Integer.toString(mon) + "/";
+		else date += Integer.toString(mon) + "/";
+		if ( day < 10 )
+			date += "0" + Integer.toString(day);
+		else date += Integer.toString(day);
+		
+		/*
 		if ( mon < 10 )
 			date += "0" + Integer.toString(mon) + "/";
 		else date += Integer.toString(mon) + "/";
@@ -84,6 +97,7 @@ public class AddEventActivity extends Activity {
 			date += "0" + Integer.toString(day) + "/";
 		else date += Integer.toString(day) + "/";
 		date += Integer.toString(year);
+		*/
 		
 		
 		/*************************************
